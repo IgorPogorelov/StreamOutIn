@@ -58,7 +58,6 @@ public class Basket {
     static Basket loadFromTxtFile(File textFile) throws Exception {
         try(BufferedReader reader = new BufferedReader(new FileReader(textFile))) {
             String[] products = reader.readLine().split(" ");
-//            String[] pricesTmp = reader.readLine().split(" ");
             int[] prices = Arrays.stream(reader.readLine().split(" "))
                     .mapToInt(Integer::parseInt)
                     .toArray();
