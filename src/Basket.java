@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.Arrays;
 
-public class Basket {
+public class Basket implements Serializable {
     private String[] products;
     private int[] prices;
     private int[] counts;
@@ -36,37 +36,54 @@ public class Basket {
         System.out.println("Итого: " + sumProducts + " руб");
     }
 
-    public void saveText(File textFile) throws IOException {
-        try (PrintWriter out = new PrintWriter(textFile)) {
-            for (String product : products) {
-                out.print(product + " ");
-            }
-            out.println();
+//    public void saveText(File textFile) throws IOException {
+//        try (PrintWriter out = new PrintWriter(textFile)) {
+//            for (String product : products) {
+//                out.print(product + " ");
+//            }
+//            out.println();
+//
+//            for (int price : prices) {
+//                out.print(price + " ");
+//            }
+//            out.println();
+//
+//            for (int count : counts) {
+//                out.print(count + " ");
+//            }
+//            out.println();
+//        }
+//    }
+//
+//    static Basket loadFromTxtFile(File textFile) throws Exception {
+//        try(BufferedReader reader = new BufferedReader(new FileReader(textFile))) {
+//            String[] products = reader.readLine().split(" ");
+//            int[] prices = Arrays.stream(reader.readLine().split(" "))
+//                    .mapToInt(Integer::parseInt)
+//                    .toArray();
+//            int[] counts = Arrays.stream(reader.readLine().split(" "))
+//                    .mapToInt(Integer::parseInt)
+//                    .toArray();
+//            Basket basket = new Basket(products, prices);
+//            basket.counts = counts;
+//            return basket;
+//        }
+//    }
 
-            for (int price : prices) {
-                out.print(price + " ");
-            }
-            out.println();
-
-            for (int count : counts) {
-                out.print(count + " ");
-            }
-            out.println();
+    public void saveBin(File file) throws IOException {
+        try (FileOutputStream fos = new FileOutputStream(file);
+            ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(this);
         }
     }
 
-    static Basket loadFromTxtFile(File textFile) throws Exception {
-        try(BufferedReader reader = new BufferedReader(new FileReader(textFile))) {
-            String[] products = reader.readLine().split(" ");
-            int[] prices = Arrays.stream(reader.readLine().split(" "))
-                    .mapToInt(Integer::parseInt)
-                    .toArray();
-            int[] counts = Arrays.stream(reader.readLine().split(" "))
-                    .mapToInt(Integer::parseInt)
-                    .toArray();
-            Basket basket = new Basket(products, prices);
-            basket.counts = counts;
+    public static Basket loadFromBinFile(File file) {
+        try (FileInputStream fis = new FileInputStream(file);
+            ObjectInputStream ois = new ObjectInputStream(fis)) {
+            Basket basket = (Basket) ois.readObject();
             return basket;
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -12,10 +12,10 @@ public class Main {
         String[] products = {"Соль", "Вода", "Гречка"};
         int[] prices = {10, 20, 50};
 
-        Basket basket = new Basket(products, prices);
+        Basket basket = basket = new Basket(products, prices);;
 
-        if (Files.exists(Path.of("basket.txt"))) {
-            basket = Basket.loadFromTxtFile(new File("basket.txt"));
+        if (Files.exists(Path.of("basket.bin"))) {
+            basket = Basket.loadFromBinFile(new File("basket.bin"));
         }
 
         for (int i = 0; i < products.length; i++) {
@@ -34,7 +34,7 @@ public class Main {
             int productCount = Integer.parseInt(parts[1]);
 
             basket.addToCart(productNumber, productCount);
-            basket.saveText(new File("basket.txt"));
+            basket.saveBin(new File("basket.bin"));
         }
 
         basket.printCart();
